@@ -173,9 +173,12 @@ module.exports = NodeHelper.create({
                     if (!self.config.powerSaving){
                         return;
                     }
-
-                    self.deactivateMonitorTimeout = setTimeout(function() {
-                        self.deactivateMonitor();
+			
+		    self.deactivateMonitorTimeout = setTimeout(function() {
+			// pir.watch sometimes sends consecutive false values (sometimes three times) before a new true value
+			// before calling setTimeout, there should always be a clearTimeout
+			clearTimeout(self.deactivateMonitorTimeout);
+			self.deactivateMonitor();
                     }, self.config.powerSavingDelay * 1000);
                 }
             });
